@@ -1,18 +1,18 @@
 import React from "react";
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 
-const CARD_VALUES = ["1", "2", "3", "5", "8", "13", "21", "34", "?", "☕"];
+export const CARD_VALUES = ["1", "2", "3", "5", "8", "13", "21", "34", "?", "☕"];
 
 type PokerCardsProps = {
-  selectedCard: string | null;
+  selectedCards: string[];
   reveal: boolean;
   onSelect: (card: string) => void;
 };
 
-const PokerCards = ({ selectedCard, reveal, onSelect }: PokerCardsProps) => (
+const PokerCards = ({ selectedCards, reveal, onSelect }: PokerCardsProps) => (
   <div className="card-grid">
     {CARD_VALUES.map((card) => {
-      const isSelected = selectedCard === card;
+      const isSelected = selectedCards.includes(card);
       const className = [
         "poker-card",
         isSelected ? "selected" : "",

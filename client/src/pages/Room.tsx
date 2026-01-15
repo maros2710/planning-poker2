@@ -18,7 +18,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import ParticipantList, { Participant } from "../components/ParticipantList";
-import PokerCards from "../components/PokerCards";
+import PokerCards, { CARD_VALUES } from "../components/PokerCards";
 import TopBar from "../components/TopBar";
 import { getCookie, setCookie } from "../utils/cookies";
 
@@ -45,7 +45,7 @@ const Room = () => {
   const [room, setRoom] = React.useState<RoomState | null>(null);
   const [name, setName] = React.useState(() => getCookie(NAME_COOKIE) || "");
   const [userId, setUserId] = React.useState(() => getCookie(USER_COOKIE) || "");
-  const [selectedCard, setSelectedCard] = React.useState<string | null>(null);
+  const [selectedCards, setSelectedCards] = React.useState<string[]>([]);
   const [nameDialogOpen, setNameDialogOpen] = React.useState(false);
   const [error, setError] = React.useState("");
   const hasJoinedRef = React.useRef(false);
@@ -115,13 +115,39 @@ const Room = () => {
 
   React.useEffect(() => {
     if (room && !room.reveal && !currentUser?.hasVoted) {
-      setSelectedCard(null);
+      setSelectedCards([]);
     }
   }, [room, currentUser?.hasVoted]);
 
+  React.useEffect(() => {
+    if (!room?.reveal || !currentUser?.card) return;
+    setSelectedCards([currentUser.card]);
+  }, [room?.reveal, currentUser?.card]);
+
+  const isNumericCard = (card: string) => Number.isFinite(Number(card));
+  const isAdjacentCard = (first: string, second: string) => {
+    const firstIndex = CARD_VALUES.indexOf(first);
+    const secondIndex = CARD_VALUES.indexOf(second);
+    return firstIndex >= 0 && secondIndex >= 0 && Math.abs(firstIndex - secondIndex) === 1;
+  };
+
   const handleVote = (card: string) => {
     if (!socket) return;
-    setSelectedCard(card);
+    if (
+      selectedCards.length === 1 &&
+      isNumericCard(card) &&
+      isNumericCard(selectedCards[0]) &&
+      isAdjacentCard(selectedCards[0], card)
+    ) {
+      const firstIndex = CARD_VALUES.indexOf(selectedCards[0]);
+      const secondIndex = CARD_VALUES.indexOf(card);
+      const ordered = firstIndex < secondIndex ? [selectedCards[0], card] : [card, selectedCards[0]];
+      setSelectedCards(ordered);
+      socket.emit("vote", { card: `RANDOM:${ordered[0]},${ordered[1]}` });
+      return;
+    }
+
+    setSelectedCards([card]);
     socket.emit("vote", { card });
   };
 
@@ -194,7 +220,7 @@ const Room = () => {
                   </Stack>
                 </Stack>
                 <Divider />
-                <PokerCards selectedCard={selectedCard} reveal={room?.reveal ?? false} onSelect={handleVote} />
+                <PokerCards selectedCards={selectedCards} reveal={room?.reveal ?? false} onSelect={handleVote} />
               </Stack>
             </CardContent>
           </Card>

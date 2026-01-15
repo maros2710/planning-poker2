@@ -162,6 +162,19 @@ io.on("connection", (socket) => {
     if (!roomCode) return;
     const room = getRoomState(roomCode);
     if (!room) return;
+    for (const user of room.users.values()) {
+      if (user.card && user.card.startsWith("RANDOM:")) {
+        const options = user.card
+          .replace("RANDOM:", "")
+          .split(",")
+          .map((value) => value.trim())
+          .filter(Boolean);
+        if (options.length >= 2) {
+          const choice = options[Math.floor(Math.random() * options.length)];
+          user.card = choice;
+        }
+      }
+    }
     room.reveal = true;
     io.to(roomCode).emit("room-state", getPublicState(room));
   });
