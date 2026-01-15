@@ -15,7 +15,7 @@ export const ThemeModeContext = React.createContext({
 const App = () => {
   const [mode, setMode] = React.useState<ThemeMode>(() => {
     const stored = localStorage.getItem(THEME_KEY) as ThemeMode | null;
-    return stored || "light";
+    return stored || "dark";
   });
 
   React.useEffect(() => {
