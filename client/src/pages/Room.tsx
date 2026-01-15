@@ -24,6 +24,7 @@ import { getCookie, setCookie } from "../utils/cookies";
 
 const NAME_COOKIE = "pp_name";
 const USER_COOKIE = "pp_user_id";
+const RANDOM_PAIR_COOKIE = "pp_random_pair";
 
 type RoomState = {
   code: string;
@@ -46,7 +47,7 @@ const Room = () => {
   const [name, setName] = React.useState(() => getCookie(NAME_COOKIE) || "");
   const [userId, setUserId] = React.useState(() => getCookie(USER_COOKIE) || "");
   const [selectedCards, setSelectedCards] = React.useState<string[]>([]);
-  const [allowRandomPair, setAllowRandomPair] = React.useState(false);
+  const [allowRandomPair, setAllowRandomPair] = React.useState(() => getCookie(RANDOM_PAIR_COOKIE) === "true");
   const [nameDialogOpen, setNameDialogOpen] = React.useState(false);
   const [error, setError] = React.useState("");
   const hasJoinedRef = React.useRef(false);
@@ -124,6 +125,10 @@ const Room = () => {
     if (!room?.reveal || !currentUser?.card) return;
     setSelectedCards([currentUser.card]);
   }, [room?.reveal, currentUser?.card]);
+
+  React.useEffect(() => {
+    setCookie(RANDOM_PAIR_COOKIE, allowRandomPair ? "true" : "false");
+  }, [allowRandomPair]);
 
   React.useEffect(() => {
     if (allowRandomPair || selectedCards.length <= 1) return;
