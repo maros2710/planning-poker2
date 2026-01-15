@@ -15,6 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
 import { ThemeModeContext } from "../App";
 
 type TopBarProps = {
@@ -65,6 +66,15 @@ const TopBar = ({
           control={<Switch checked={allowRandomPair} onChange={onToggleRandomPair} color="success" />}
           label="Random pair"
         />
+        <Tooltip title={allowRandomPair ? "Random pair on" : "Random pair off"}>
+          <IconButton
+            color={allowRandomPair ? "success" : "inherit"}
+            onClick={onToggleRandomPair}
+            sx={{ display: { xs: "inline-flex", md: "none" } }}
+          >
+            <ShuffleIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="Copy link">
           <IconButton color="inherit" onClick={onCopyLink}>
             <ContentCopyIcon />
