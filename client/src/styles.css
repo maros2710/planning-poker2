@@ -31,13 +31,14 @@ body {
 }
 
 .poker-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.2);
+  transform: none;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.2);
 }
 
 .poker-card.selected {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.25);
+  transform: none;
+  border: 2px solid #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.35);
 }
 
 .poker-card.revealed {

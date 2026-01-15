@@ -3,7 +3,9 @@ import {
   AppBar,
   Box,
   Button,
+  FormControlLabel,
   IconButton,
+  Switch,
   Toolbar,
   Tooltip,
   Typography
@@ -22,9 +24,20 @@ type TopBarProps = {
   onEditName: () => void;
   onLeave: () => void;
   onCopyLink: () => void;
+  allowRandomPair: boolean;
+  onToggleRandomPair: () => void;
 };
 
-const TopBar = ({ roomCode, roomName, name, onEditName, onLeave, onCopyLink }: TopBarProps) => {
+const TopBar = ({
+  roomCode,
+  roomName,
+  name,
+  onEditName,
+  onLeave,
+  onCopyLink,
+  allowRandomPair,
+  onToggleRandomPair
+}: TopBarProps) => {
   const { mode, toggle } = React.useContext(ThemeModeContext);
 
   return (
@@ -47,6 +60,11 @@ const TopBar = ({ roomCode, roomName, name, onEditName, onLeave, onCopyLink }: T
             Signed in as {name}
           </Typography>
         </Box>
+        <FormControlLabel
+          sx={{ display: { xs: "none", md: "flex" } }}
+          control={<Switch checked={allowRandomPair} onChange={onToggleRandomPair} color="success" />}
+          label="Random pair"
+        />
         <Tooltip title="Copy link">
           <IconButton color="inherit" onClick={onCopyLink}>
             <ContentCopyIcon />

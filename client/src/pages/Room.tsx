@@ -46,6 +46,7 @@ const Room = () => {
   const [name, setName] = React.useState(() => getCookie(NAME_COOKIE) || "");
   const [userId, setUserId] = React.useState(() => getCookie(USER_COOKIE) || "");
   const [selectedCards, setSelectedCards] = React.useState<string[]>([]);
+  const [allowRandomPair, setAllowRandomPair] = React.useState(false);
   const [nameDialogOpen, setNameDialogOpen] = React.useState(false);
   const [error, setError] = React.useState("");
   const hasJoinedRef = React.useRef(false);
@@ -124,6 +125,11 @@ const Room = () => {
     setSelectedCards([currentUser.card]);
   }, [room?.reveal, currentUser?.card]);
 
+  React.useEffect(() => {
+    if (allowRandomPair || selectedCards.length <= 1) return;
+    setSelectedCards([selectedCards[0]]);
+  }, [allowRandomPair, selectedCards]);
+
   const isNumericCard = (card: string) => Number.isFinite(Number(card));
   const isAdjacentCard = (first: string, second: string) => {
     const firstIndex = CARD_VALUES.indexOf(first);
@@ -134,6 +140,7 @@ const Room = () => {
   const handleVote = (card: string) => {
     if (!socket) return;
     if (
+      allowRandomPair &&
       selectedCards.length === 1 &&
       isNumericCard(card) &&
       isNumericCard(selectedCards[0]) &&
@@ -188,6 +195,8 @@ const Room = () => {
         onEditName={() => setNameDialogOpen(true)}
         onLeave={handleLeave}
         onCopyLink={() => navigator.clipboard.writeText(shareLink)}
+        allowRandomPair={allowRandomPair}
+        onToggleRandomPair={() => setAllowRandomPair((prev) => !prev)}
       />
       <Container maxWidth="lg" sx={{ py: 3 }}>
         <Stack spacing={3}>
