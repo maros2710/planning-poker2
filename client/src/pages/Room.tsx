@@ -201,14 +201,20 @@ const Room = () => {
                     <Typography variant="h6" fontWeight={700}>
                       Voting
                     </Typography>
-                    <Typography variant="h6" fontWeight={600} color="text.secondary">
-                      {votedCount} of {totalCount} voted
-                    </Typography>
-                    {room?.reveal && (
-                      <Typography variant="subtitle1" fontWeight={600} color="text.secondary">
-                        Average: {averageVote !== null ? averageVote.toFixed(1) : "N/A"}
+                    <Stack direction="row" spacing={2} alignItems="center" flexWrap="nowrap">
+                      <Typography variant="h6" fontWeight={600} color="text.secondary">
+                        {votedCount} of {totalCount} voted
                       </Typography>
-                    )}
+                      {room?.reveal && (
+                        <Typography
+                          variant="h6"
+                          fontWeight={700}
+                          sx={{ color: "success.dark" }}
+                        >
+                          Avg {averageVote !== null ? averageVote.toFixed(1) : "N/A"}
+                        </Typography>
+                      )}
+                    </Stack>
                   </Box>
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <Button variant="contained" onClick={handleReveal}>
