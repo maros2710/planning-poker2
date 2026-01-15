@@ -28,9 +28,9 @@ const TopBar = ({ roomCode, roomName, name, onEditName, onLeave, onCopyLink }: T
   const { mode, toggle } = React.useContext(ThemeModeContext);
 
   return (
-    <AppBar position="sticky" color="transparent" elevation={0}>
+    <AppBar position="sticky" color="transparent" elevation={0} sx={{ bgcolor: "#ffffff" }}>
       <Toolbar sx={{ gap: 2 }}>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
           <Typography variant="h6" fontWeight={700}>
             {roomName || `Room ${roomCode}`}
           </Typography>
