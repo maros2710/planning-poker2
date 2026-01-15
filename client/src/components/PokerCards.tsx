@@ -22,7 +22,11 @@ const PokerCards = ({ selectedCards, reveal, onSelect }: PokerCardsProps) => (
         .join(" ");
 
       return (
-        <Card key={card} className={className} sx={{ width: 80, height: 110 }}>
+        <Card
+          key={card}
+          className={className}
+          sx={{ width: { xs: 40, sm: 80 }, height: { xs: 55, sm: 110 } }}
+        >
           <CardActionArea onClick={() => onSelect(card)} sx={{ height: "100%" }}>
             <CardContent sx={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Typography variant="h6" fontWeight={700}>
