@@ -210,7 +210,7 @@ const Room = () => {
           <Card variant="outlined">
             <CardContent>
               <Stack spacing={2}>
-                <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ xs: "stretch", md: "center" }}>
+                <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
                   <Box sx={{ flexGrow: 1 }}>
                     <Typography variant="h6" fontWeight={700}>
                       Voting
@@ -230,7 +230,7 @@ const Room = () => {
                       )}
                     </Stack>
                   </Box>
-                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ minWidth: { xs: 150, sm: "auto" } }}>
                     <Button variant="contained" onClick={handleReveal}>
                       Reveal cards
                     </Button>
