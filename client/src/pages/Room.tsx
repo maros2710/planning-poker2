@@ -215,19 +215,28 @@ const Room = () => {
                     <Typography variant="h6" fontWeight={700}>
                       Voting
                     </Typography>
-                    <Stack direction="row" spacing={2} alignItems="center" flexWrap="nowrap">
-                      <Typography variant="h6" fontWeight={600} color="text.secondary">
+                    <Stack
+                      direction={{ xs: "column", sm: "row" }}
+                      spacing={{ xs: 0.5, sm: 2 }}
+                      alignItems={{ xs: "flex-start", sm: "center" }}
+                      sx={{ minHeight: { xs: "3rem", sm: "1.75rem" } }}
+                    >
+                      <Typography
+                        variant="h6"
+                        fontWeight={600}
+                        color="text.secondary"
+                        sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+                      >
                         {votedCount} of {totalCount} voted
                       </Typography>
-                      {room?.reveal && (
-                        <Typography
-                          variant="h6"
-                          fontWeight={700}
-                          sx={{ color: "success.dark" }}
-                        >
-                          Avg {averageVote !== null ? averageVote.toFixed(1) : "N/A"}
-                        </Typography>
-                      )}
+                      <Typography
+                        variant="h6"
+                        fontWeight={700}
+                        sx={{ color: "success.dark", visibility: room?.reveal ? "visible" : "hidden" }}
+                        fontSize={{ xs: "1rem", sm: "1.25rem" }}
+                      >
+                        Avg {averageVote !== null ? averageVote.toFixed(1) : "N/A"}
+                      </Typography>
                     </Stack>
                   </Box>
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ minWidth: { xs: 150, sm: "auto" } }}>
