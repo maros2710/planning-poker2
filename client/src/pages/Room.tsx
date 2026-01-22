@@ -50,7 +50,10 @@ const Room = () => {
   const [allowRandomPair, setAllowRandomPair] = React.useState(() => getCookie(RANDOM_PAIR_COOKIE) === "true");
   const [nameDialogOpen, setNameDialogOpen] = React.useState(false);
   const [error, setError] = React.useState("");
-  const hasJoinedRef = React.useRef(false);
+  const hasConnectedRef = React.useRef(false);
+  const roomCodeRef = React.useRef(code);
+  const userIdRef = React.useRef(userId);
+  const nameRef = React.useRef(name);
 
   const currentUser = room?.users.find((user) => user.id === userId);
   const isAdmin = currentUser?.isAdmin ?? false;
@@ -81,6 +84,18 @@ const Room = () => {
   }, [name]);
 
   React.useEffect(() => {
+    roomCodeRef.current = code;
+  }, [code]);
+
+  React.useEffect(() => {
+    userIdRef.current = userId;
+  }, [userId]);
+
+  React.useEffect(() => {
+    nameRef.current = name;
+  }, [name]);
+
+  React.useEffect(() => {
     const newSocket = io({ autoConnect: false });
     setSocket(newSocket);
     return () => {
@@ -96,23 +111,31 @@ const Room = () => {
       setError(payload?.message || "Something went wrong with the room.");
     };
     const handleKicked = () => navigate("/");
+    const handleConnect = () => {
+      const currentRoomCode = roomCodeRef.current;
+      const currentUserId = userIdRef.current;
+      const currentName = nameRef.current.trim();
+      if (!currentRoomCode || !currentUserId || !currentName) return;
+      socket.emit("join-room", { roomCode: currentRoomCode, userId: currentUserId, name: currentName });
+    };
 
     socket.on("room-state", handleRoomState);
     socket.on("room-error", handleRoomError);
     socket.on("kicked", handleKicked);
+    socket.on("connect", handleConnect);
 
     return () => {
       socket.off("room-state", handleRoomState);
       socket.off("room-error", handleRoomError);
       socket.off("kicked", handleKicked);
+      socket.off("connect", handleConnect);
     };
   }, [socket, navigate]);
 
   React.useEffect(() => {
-    if (!socket || !userId || !code || !name.trim() || hasJoinedRef.current) return;
+    if (!socket || !userId || !code || !name.trim() || hasConnectedRef.current) return;
     socket.connect();
-    socket.emit("join-room", { roomCode: code, userId, name: name.trim() });
-    hasJoinedRef.current = true;
+    hasConnectedRef.current = true;
   }, [socket, userId, code, name]);
 
   React.useEffect(() => {
